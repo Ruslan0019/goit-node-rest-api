@@ -46,7 +46,7 @@ export const deleteContact = async (req, res) => {
   }
 };
 
-export const createContact = (req, res) => {
+export const createContact = async (req, res) => {
   const schema = createContactSchema;
 
   const { error } = schema.validate(req.body);
@@ -57,7 +57,7 @@ export const createContact = (req, res) => {
   const { name, email, phone } = req.body;
 
   try {
-    const user = addContact(name, email, phone);
+    const user = await addContact(name, email, phone);
     if (!user) {
       return res.status(400).json({ message: "Failed to add contact" });
     }
@@ -71,7 +71,13 @@ export const createContact = (req, res) => {
 export const updateContact = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
-  console.log(req.body);
+
+  if (Object.keys(body).length === 0) {
+    return res
+      .status(400)
+      .json({ message: "Body must have at least one field" });
+  }
+
   const { error } = updateContactSchema.validate(body);
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
