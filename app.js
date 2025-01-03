@@ -1,11 +1,22 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
 import contactsRouter from "./routes/contactsRouter.js";
+dotenv.config();
 
 const app = express();
-
+mongoose
+  .connect(process.env.MANGO_DB_URL)
+  .then(() => {
+    console.log("MANGO DB connected");
+  })
+  .catch((err) => {
+    console.log(err);
+    process.exit(1);
+  });
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());

@@ -6,17 +6,19 @@ import {
   createContact,
   updateContact,
 } from "../controllers/contactsControllers.js";
+import { checkcontactId } from "../midelwares/contactMidelwares.js";
 
 const contactsRouter = express.Router();
 
+// Используем миддлвару перед обработчиком маршрута
 contactsRouter.get("/", getAllContacts);
 
-contactsRouter.get("/:id", getOneContact);
+contactsRouter.get("/:id", checkcontactId, getOneContact);
 
-contactsRouter.delete("/:id", deleteContact);
+contactsRouter.delete("/:id", checkcontactId, deleteContact);
 
 contactsRouter.post("/", createContact);
 
-contactsRouter.put("/:id", updateContact);
+contactsRouter.put("/:id", checkcontactId, updateContact);
 
 export default contactsRouter;
